@@ -1,118 +1,66 @@
-# Project Name
-맛동산 서버
+# 내 아이를 위한 맞춤형 동화 산타, 맛동산🎅
+![Image](https://github.com/user-attachments/assets/4804b3b8-13d4-45ee-bd35-80e6fe64a40c) 
 
-## Table of Contents
-[ 📝 Overview](#📝-overview)  
-[ 📁 Project Structure](#📁-project-structure)  
-[ 🚀 Getting Started](#🚀-getting-started)  
-[ 💡 Motivation](#💡-motivation)  
-[ 🎬 Demo](#🎬-demo)  
-[ 🌐 Deployment](#🌐-deployment)  
-[ 🤝 Contributing](#🤝-contributing)  
-[ ❓ Troubleshooting & FAQ](#❓-troubleshooting-&-faq)  
-[ 📈 Performance](#📈-performance)  
+## 📝 소개
+<img src="https://github.com/user-attachments/assets/915df6ba-d8e4-4ff0-8e90-bb29076f5426" width="250" height="250">
 
-## 📝 Overview
-맛동산 서버는 사용자 맞춤형 동화를 생성하고 관리하는 웹 애플리케이션입니다. 이 프로젝트의 주된 목적은 사용자가 동화를 생성하고, 수정하며, 다른 사용자와 공유할 수 있는 플랫폼을 제공하는 것입니다.
+'맛동산'은 아이를 위한 AI 맞춤형 동화를 생성하고 자유롭게 공유할 수 있는 컨텐츠 플랫폼입니다.   
+추가적으로 아이에게 동화를 들려주며 직접 상호작용할 수 있는 전용 인형 디바이스를 제공합니다.
 
-### Main Purpose
-- 사용자가 동화를 생성하고, 수정하며, 다른 사용자와 공유할 수 있는 기능을 제공합니다.
-- 동화 생성 과정에서 AI를 활용하여 창의적인 콘텐츠를 생성합니다.
-- 어린이와 부모를 위한 교육적이고 재미있는 경험을 제공합니다.
+## 🔗 주요 기능
+![Image](https://github.com/user-attachments/assets/16ddae2d-3d09-4732-a9ca-89cfd29355f5)
+#### 1. 회원가입 및 로그인
+   - 카카오 소셜 로그인
+#### 3. AI를 통한 아이 맞춤형 동화 생성
+   - 한글/영어 두가지 언어 지원
+   - 아이의 언어별 학습 수준을 고려
+   - 아이의 관심사에 맞게 무엇이든 자유롭게 입력받아 관련된 동화 생성
+#### 4. 동화 재생 플레이어
+   - 생성한 동화의 오디오를 재생
+   - 텍스트를 선택해 원하는 위치로 이동
+#### 5. 내 도서관
+   - 좋아요한 동화를 확인
+   - 최근 읽은 동화를 확인
+#### 6. SNS 기능
+   - 원하는 작가를 팔로우 및 팔로우 작가의 동화 조회
+   - 인기동화, 최신동화
 
-### Key Features
-- 동화 생성 및 수정 기능
-- 동화에 대한 좋아요 및 댓글 기능
-- 사용자 프로필 관리 및 자녀 등록 기능
-- 동화 검색 및 필터링 기능
+## 🎬 시연영상
+[![Video Label](http://img.youtube.com/vi/1L9vnwvFkTo/0.jpg)](https://www.youtube.com/watch?v=1L9vnwvFkTo)
 
-### Core Technology Stack
-- Frontend: React
-- Backend: Spring Boot
-- Database: MongoDB
-- Others: AWS S3, Redis
+## 👤팀원 소개
+|분야|이름|역할|
+|------|---|---|
+|클라우드|최효선|서비스 기획, 인프라 아키텍처 설계, 백엔드 개발|
+|클라우드|박지혁|서비스 기획, 인프라 아키텍처 설계, 모듈 개발|
+|백엔드|김은학|서비스 기획, ERD 및 API 설계, 백엔드 개발|
+|프론트엔드|전종건|팀장, 서비스 기획, 프론트엔드 개발|
+|인공지능|김예지|서비스 기획, 데이터 수집 및 모델 학습&개선|
+|인공지능|한채형|서비스 기획, 데이터 수집 및 모델 학습&개선|
 
-## 📁 Project Structure
-[맛동산 서버]
-├── 📁 com.example.matdongsanserver  
-│   ├── 📁 common  
-│   │   ├── 📁 api  
-│   │   ├── 📁 config  
-│   │   ├── 📁 exception  
-│   │   ├── 📁 external  
-│   │   ├── 📁 model  
-│   │   └── 📁 utils  
-│   ├── 📁 domain  
-│   │   ├── 📁 auth  
-│   │   ├── 📁 child  
-│   │   ├── 📁 follow  
-│   │   ├── 📁 library  
-│   │   ├── 📁 module  
-│   │   ├── 📁 story  
-│   │   └── 📁 dashboard  
-│   └── MatdongsanServerApplication.java  
-└── ...
+## 📚 기술 스택
+#### Communication
+[![My Skills](https://skillicons.dev/icons?i=git,github,discord,notion)](https://skillicons.dev)
+<img src="https://github.com/user-attachments/assets/593f68eb-1dfa-4f4a-8e77-99c6c037d3f8" width="50" height="50">
+<img src="https://github.com/user-attachments/assets/f1d77f0a-eaa4-489f-9405-519c4feced22" width="50" height="50">
+#### Backend
+[![My Skills](https://skillicons.dev/icons?i=java,spring,gradle,mysql,mongodb,redis)](https://skillicons.dev)
+<img src="https://github.com/user-attachments/assets/ec4155b6-9a26-439c-8227-b85630f234b8" width="50" height="50">
+<img src="https://github.com/user-attachments/assets/ec0cd581-5792-4a74-9791-f7525076a077" width="50" height="50">
+<img src="https://github.com/user-attachments/assets/65cb26ce-9727-4650-9229-ae609acb8de9" width="50" height="50">
+<img src="https://github.com/user-attachments/assets/b3f13cf8-77ad-4113-829e-7156ef725c05" width="50" height="50">
+#### Frontend
+[![My Skills](https://skillicons.dev/icons?i=html,js,css,react,redux)](https://skillicons.dev)
+#### AI
+[![My Skills](https://skillicons.dev/icons?i=python,pytorch,vercel)](https://skillicons.dev)
+#### Cloud
+[![My Skills](https://skillicons.dev/icons?i=aws,githubactions,docker,elasticsearch,grafana,prometheus)](https://skillicons.dev)
+#### Tool
+[![My Skills](https://skillicons.dev/icons?i=vscode,postman,figma)](https://skillicons.dev)
+<img src="https://github.com/user-attachments/assets/4189b9d0-ffd0-426a-a2b8-96a4ef391c08" width="50" height="50">
 
-## 🚀 Getting Started
+## 💾 ERD
+![Image](https://github.com/user-attachments/assets/3754cd20-ec71-483a-883a-2f47f4008ba6)
 
-### Prerequisites
-- 지원 운영 체제
-  * Windows, macOS, Linux
-- 필수 소프트웨어
-  * 런타임 환경: Java
-  * 버전 요구 사항: Java 17
-  * 패키지 관리자: Gradle
-- 시스템 종속성
-  * 시스템 수준 라이브러리나 도구는 별도로 필요하지 않습니다.
-
-### Installation
-- Dockerfile이 있는 경우, 이를 사용할 수 있습니다.
-- 모든 설치 방법은 Dockerfile에 포함되어 있습니다.
-
-```bash
-# 레포지토리 클론
-git clone https://github.com/Nano2998/matdongsan-server/.git
-cd matdongsan-server
-
-# 필요한 패키지 설치
-./gradlew build
-
-# 환경 설정
-# 환경 설정 명령어는 프로젝트의 요구 사항에 따라 다를 수 있습니다.
-```
-
-### Usage
-```bash
-# 실행 방법
-./gradlew bootRun
-```
-
-## 💡 Motivation
-이 프로젝트는 어린이들에게 맞춤형 동화를 제공하고, 부모와 자녀가 함께 즐길 수 있는 경험을 만들기 위해 시작되었습니다. AI 기술을 활용하여 창의적인 동화를 생성하고, 이를 통해 교육적 가치를 높이고자 합니다.
-
-## 🎬 Demo
-![Demo Video or Screenshot](path/to/demo.mp4)
-
-## 🌐 Deployment
-- AWS, Heroku와 같은 클라우드 플랫폼에 배포 가능합니다.
-- 배포 단계는 다음과 같습니다:
-  1. AWS S3에 정적 파일 업로드
-  2. EC2 인스턴스에 Spring Boot 애플리케이션 배포
-  3. 데이터베이스 연결 설정
-
-## 🤝 Contributing
-- 기여를 원하시는 분은 이슈를 생성하거나 Pull Request를 제출해 주세요.
-- 코드 스타일은 Java의 표준 스타일을 따릅니다.
-- Pull Request는 코드 리뷰 후 병합됩니다.
-
-## ❓ Troubleshooting & FAQ
-- **Q: 서버가 시작되지 않아요.**  
-  A: Java 버전이 맞는지 확인하세요. Java 11 이상이 필요합니다.
-  
-- **Q: 데이터베이스 연결 오류가 발생합니다.**  
-  A: 데이터베이스 설정을 확인하고, MongoDB가 실행 중인지 확인하세요.
-
-## 📈 Performance
-- 이 애플리케이션은 MongoDB를 사용하여 빠른 데이터 검색을 지원합니다.
-- Redis를 사용하여 캐시를 관리하여 성능을 최적화합니다.
-- 동화 생성 요청은 비동기적으로 처리되어 사용자 경험을 향상시킵니다.
+## 🌐 아키텍처
+![Image](https://github.com/user-attachments/assets/a7a64f5d-62e6-43f6-a52c-1f268321c7e5)
