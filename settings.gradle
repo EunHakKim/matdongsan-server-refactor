@@ -1,1 +1,3 @@
 rootProject.name = 'matdongsan-server'
+
+include 'core'
