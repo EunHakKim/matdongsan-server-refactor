@@ -1,3 +1,9 @@
 rootProject.name = 'matdongsan-server'
 
 include 'core'
+include 'support'
+include 'support:logging'
+findProject(':support:logging')?.name = 'logging'
+include 'support:monitoring'
+findProject(':support:monitoring')?.name = 'monitoring'
+
