@@ -1,5 +1,6 @@
 application.yml
-application-security.yml
+application-tts.yml
+application-kakao.yml
 application-ai.yml
 application-prompt.yml
 HELP.md

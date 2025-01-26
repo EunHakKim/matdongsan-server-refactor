@@ -3,6 +3,7 @@ jar.enabled = false
 
 dependencies {
     implementation project(":clients:tts-client")
+    implementation project(":clients:kakao-client")
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'

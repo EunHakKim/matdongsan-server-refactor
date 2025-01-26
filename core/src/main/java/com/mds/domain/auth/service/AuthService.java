@@ -1,7 +1,6 @@
 package com.mds.domain.auth.service;
 
-import com.mds.domain.auth.client.KakaoAuthClient;
-import com.mds.domain.auth.client.KakaoUserInfoClient;
+import com.mds.KakaoClient;
 import com.mds.domain.auth.dto.KakaoInfo;
 import com.mds.domain.auth.dto.LoginRequest;
 import com.mds.domain.auth.dto.LoginResponse;
@@ -17,21 +16,16 @@ import com.mds.domain.member.repository.MemberRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -42,17 +36,7 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final KakaoAuthClient kakaoAuthClient;
-    private final KakaoUserInfoClient kakaoUserInfoClient;
-
-    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
-    private String clientSecret;
-
-    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-    private String redirectUri;
+    private final KakaoClient kakaoClient;
 
     private static final String REFRESH_HEADER = "refreshToken";
 
@@ -62,21 +46,9 @@ public class AuthService {
      * @return
      */
     public String getToken(final String code) {
+        // 파싱 고민 & 오류 처리 수정 필요
+        return parseJsonNode(kakaoClient.getAccessToken(code)).get("access_token").asText();
 
-        Map<String, String> requestParams = new HashMap<>();
-        requestParams.put("grant_type", "authorization_code");
-        requestParams.put("client_id", clientId);
-        requestParams.put("client_secret", clientSecret);
-        requestParams.put("redirect_uri", redirectUri);
-        requestParams.put("code", code);
-
-        try {
-            ResponseEntity<String> response = kakaoAuthClient.getAccessToken(requestParams);
-
-            return parseJsonNode(response.getBody()).get("access_token").asText();
-        } catch (FeignException e) {
-            throw new AuthException(AuthErrorCode.AUTH_SERVER_ERROR);
-        }
     }
 
     /**
@@ -135,19 +107,15 @@ public class AuthService {
      * @param token
      * @return
      */
-    private KakaoInfo getKakaoUserEmail(final String token) {
-        log.info("Retrieving Kakao user email.");
-        try {
-            ResponseEntity<String> response = kakaoUserInfoClient.getUserInfo("Bearer " + token);
+    private KakaoInfo getKakaoUserEmail(String token) {
+        // 파싱 고민 & 오류 처리 수정 필요
+        String response = kakaoClient.getUserInfo(token);
 
-            return KakaoInfo.builder()
-                    .email(parseJsonNode(response.getBody()).get("kakao_account").get("email").asText())
-                    .nickname(parseJsonNode(response.getBody()).get("kakao_account").get("profile").get("nickname").asText())
-                    .profileImage(parseJsonNode(response.getBody()).get("kakao_account").get("profile").get("profile_image_url").asText())
-                    .build();
-        } catch (FeignException e) {
-            throw new AuthException(AuthErrorCode.AUTH_SERVER_ERROR);
-        }
+        return KakaoInfo.builder()
+                .email(parseJsonNode(response).get("kakao_account").get("email").asText())
+                .nickname(parseJsonNode(response).get("kakao_account").get("profile").get("nickname").asText())
+                .profileImage(parseJsonNode(response).get("kakao_account").get("profile").get("profile_image_url").asText())
+                .build();
     }
 
     /**

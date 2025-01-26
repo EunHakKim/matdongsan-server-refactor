@@ -1,8 +1,9 @@
 package com.mds;
 
 import com.mds.model.TtsClientResult;
-import feign.FeignException;
 import org.springframework.stereotype.Component;
+
+import static feign.FeignException.*;
 
 @Component
 public class TtsClient {
@@ -17,7 +18,7 @@ public class TtsClient {
         try{
             TtsRequestDto request = new TtsRequestDto(file_name, language, text, folder);
             return ttsApi.sendTTSRequest(request).toResult();
-        } catch (FeignException.FeignClientException e) {
+        } catch (FeignClientException e) {
             throw new TtsClientException("CLIENT");
         } catch (Exception e) {
             throw new TtsClientException(e.getMessage());

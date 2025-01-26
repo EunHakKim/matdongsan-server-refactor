@@ -1,3 +1,17 @@
 tts:
   api:
     url: http://3.35.49.154
+
+spring.cloud.openfeign:
+  client:
+    config:
+      example-api:
+        connectTimeout: 2100
+        readTimeout: 5000
+        loggerLevel: full
+  compression:
+    response:
+      enabled: false
+  httpclient:
+    max-connections: 2000
+    max-connections-per-route: 500
