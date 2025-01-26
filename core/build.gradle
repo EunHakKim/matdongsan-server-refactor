@@ -2,6 +2,7 @@ bootJar.enabled = true
 jar.enabled = false
 
 dependencies {
+    implementation project(":clients:tts-client")
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -9,7 +10,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-    runtimeOnly 'com.h2database:h2'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
@@ -38,7 +38,6 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
     // FeignClient
-    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'

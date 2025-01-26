@@ -5,7 +5,6 @@ import com.mds.common.exception.BusinessException;
 import com.mds.common.exception.CommonErrorCode;
 import com.mds.common.utils.ResponseParser;
 import com.mds.common.utils.S3Utils;
-import com.mds.domain.story.dto.StoryDto;
 import com.mds.domain.story.entity.mongo.Language;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,6 @@ import java.util.Map;
 public class ExternalApiRequest {
 
     private final OpenAiClient openAIClient;
-    private final TTSClient ttsClient;
     private final S3Utils s3Utils;
     private final PromptsConfig promptsConfig;
     private final ResponseParser responseParser;
@@ -114,33 +112,6 @@ public class ExternalApiRequest {
         }
         String imageUrl = responseParser.extractImageUrl(response.getBody());
         return s3Utils.uploadImageFromUrl("cover/", storyId, imageUrl);
-    }
-
-    /**
-     * TTS 요청 전송 및 응답을 반환
-     * @param fileName
-     * @param text
-     * @param language
-     * @return
-     */
-    public StoryDto.TTSResponse sendTTSRequest(String fileName, String text, Language language, String folder) {
-        StoryDto.TTSCreationRequest ttsCreationRequest = StoryDto.TTSCreationRequest.builder()
-                .file_name(fileName)
-                .text(text)
-                .language(language == Language.EN ? "EN" : "KR")
-                .folder(folder)
-                .build();
-
-        ResponseEntity<StoryDto.TTSResponse> response = ttsClient.sendTTSRequest(
-                "application/json",
-                ttsCreationRequest
-        );
-
-        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            return response.getBody();
-        } else {
-            throw new BusinessException(CommonErrorCode.TTS_GENERATION_FAILED);
-        }
     }
 
     /**

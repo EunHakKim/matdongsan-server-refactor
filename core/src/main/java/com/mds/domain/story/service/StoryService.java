@@ -1,5 +1,6 @@
 package com.mds.domain.story.service;
 
+import com.mds.TtsClient;
 import com.mds.common.config.PromptsConfig;
 import com.mds.domain.follow.repository.FollowRepository;
 import com.mds.domain.library.service.LibraryService;
@@ -14,6 +15,7 @@ import com.mds.domain.story.exception.StoryErrorCode;
 import com.mds.domain.story.exception.StoryException;
 import com.mds.domain.story.repository.StoryLikeRepository;
 import com.mds.domain.story.repository.mongo.StoryRepository;
+import com.mds.model.TtsClientResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ public class StoryService {
     private final ExternalApiRequest externalApiRequest;
     private final StoryCacheService storyCacheService;
     private final FollowRepository followRepository;
+    private final TtsClient ttsClient;
 
     /**
      * 동화 생성
@@ -194,11 +197,14 @@ public class StoryService {
                     .timestamps(story.getTimestamps())
                     .build();
         }
-
-        StoryDto.TTSResponse ttsResponse = externalApiRequest.sendTTSRequest(
-                storyId, story.getContent(), story.getLanguage(), "tts"
+        TtsClientResult ttsClientResult = ttsClient.requestTts(
+                storyId, story.getLanguage() == Language.EN ? "EN" : "KO", story.getContent(), "tts"
         );
-        storyRepository.save(story.updateTTSUrl(ttsResponse.getTtsUrl(), ttsResponse.getTimestamps()));
-        return ttsResponse;
+
+        storyRepository.save(story.updateTTSUrl(ttsClientResult.ttsUrl(), ttsClientResult.timestamps()));
+        return StoryDto.TTSResponse.builder()
+                .ttsUrl(ttsClientResult.ttsUrl())
+                .timestamps(ttsClientResult.timestamps())
+                .build();
     }
 }

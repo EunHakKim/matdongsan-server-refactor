@@ -1,5 +1,6 @@
 package com.mds.domain.module.service;
 
+import com.mds.TtsClient;
 import com.mds.domain.child.repository.ChildRepository;
 import com.mds.domain.dashboard.entity.QuestionAnswer;
 import com.mds.domain.dashboard.repository.QuestionAnswerRepository;
@@ -8,7 +9,9 @@ import com.mds.domain.module.exception.ModuleException;
 import com.mds.domain.dashboard.entity.StoryQuestion;
 import com.mds.domain.dashboard.repository.StoryQuestionRepository;
 import com.mds.common.external.ExternalApiRequest;
+import com.mds.domain.story.entity.mongo.Language;
 import com.mds.domain.story.service.StoryService;
+import com.mds.model.TtsClientResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
@@ -39,6 +42,7 @@ public class ModuleService {
     private final ChildRepository childRepository;
     private final QuestionAnswerRepository questionAnswerRepository;
     private final ExternalApiRequest externalApiRequest;
+    private final TtsClient ttsClient;
 
 //    /**
 //     * 초기 연결 설정
@@ -86,9 +90,9 @@ public class ModuleService {
         storyQuestion.updateChild(childRepository.findByIdOrThrow(childId));
 
         storyQuestion.getQuestionAnswers().forEach(
-                qna -> sendMqttMessage("play-and-record", externalApiRequest.sendTTSRequest(
-                        String.valueOf(qna.getId()), qna.getQuestion(), storyQuestion.getLanguage(), "tts_question"
-                ).getTtsUrl())
+                qna -> sendMqttMessage("play-and-record", ttsClient.requestTts(
+                        String.valueOf(qna.getId()), storyQuestion.getLanguage() == Language.EN ? "EN" : "KO", qna.getQuestion(), "tts_question"
+                ).ttsUrl())
         );
     }
 
