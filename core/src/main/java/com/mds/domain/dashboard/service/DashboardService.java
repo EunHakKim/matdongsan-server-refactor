@@ -1,5 +1,7 @@
 package com.mds.domain.dashboard.service;
 
+import com.mds.OpenAiClient;
+import com.mds.common.utils.ResponseParser;
 import com.mds.domain.child.entity.Child;
 import com.mds.domain.child.repository.ChildRepository;
 import com.mds.domain.dashboard.entity.QuestionAnswer;
@@ -8,11 +10,11 @@ import com.mds.domain.member.exception.MemberException;
 import com.mds.domain.member.repository.MemberRepository;
 import com.mds.domain.dashboard.dto.DashboardDto;
 import com.mds.domain.dashboard.entity.StoryQuestion;
+import com.mds.domain.story.entity.mongo.Language;
 import com.mds.domain.story.entity.mongo.Story;
 import com.mds.domain.dashboard.repository.QuestionAnswerRepository;
 import com.mds.domain.dashboard.repository.StoryQuestionRepository;
 import com.mds.domain.story.repository.mongo.StoryRepository;
-import com.mds.common.external.ExternalApiRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,7 +37,8 @@ public class DashboardService {
     private final QuestionAnswerRepository questionAnswerRepository;
     private final ChildRepository childRepository;
     private final StoryRepository storyRepository;
-    private final ExternalApiRequest externalApiRequest;
+    private final OpenAiClient openAiClient;
+    private final ResponseParser responseParser;
 
     /**
      * 동화 질문 생성
@@ -55,8 +58,14 @@ public class DashboardService {
         );
 
         // 동화 질문 생성 요청 및 파싱
-        List<Map<String, String>> parsedQuestions = externalApiRequest.sendQuestionRequest(
-                story.getLanguage(), story.getAge(), story.getContent()
+        List<Map<String, String>> parsedQuestions = responseParser.extractQuestions(
+                responseParser.extractChatGptContent(
+                    openAiClient.requestQuestion(
+                            story.getAge(),
+                            story.getLanguage().equals(Language.EN) ? "english" : "korean",
+                            story.getContent()
+                    )
+                )
         );
 
         // QuestionAnswer 엔티티 생성 및 저장

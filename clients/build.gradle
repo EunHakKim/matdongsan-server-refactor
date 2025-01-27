@@ -3,3 +3,6 @@ subprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     }
 }
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+}

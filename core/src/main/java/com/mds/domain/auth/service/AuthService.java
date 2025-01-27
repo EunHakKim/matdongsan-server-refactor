@@ -47,7 +47,7 @@ public class AuthService {
      */
     public String getToken(final String code) {
         // 파싱 고민 & 오류 처리 수정 필요
-        return parseJsonNode(kakaoClient.getAccessToken(code)).get("access_token").asText();
+        return parseJsonNode(kakaoClient.requestAccessToken(code)).get("access_token").asText();
 
     }
 
@@ -109,7 +109,7 @@ public class AuthService {
      */
     private KakaoInfo getKakaoUserEmail(String token) {
         // 파싱 고민 & 오류 처리 수정 필요
-        String response = kakaoClient.getUserInfo(token);
+        String response = kakaoClient.requestUserInfo(token);
 
         return KakaoInfo.builder()
                 .email(parseJsonNode(response).get("kakao_account").get("email").asText())

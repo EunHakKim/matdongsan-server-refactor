@@ -1,12 +1,13 @@
 package com.mds.domain.story.service;
 
+import com.mds.OpenAiClient;
 import com.mds.TtsClient;
-import com.mds.common.config.PromptsConfig;
+import com.mds.common.utils.ResponseParser;
+import com.mds.common.utils.S3Utils;
 import com.mds.domain.follow.repository.FollowRepository;
 import com.mds.domain.library.service.LibraryService;
 import com.mds.domain.member.entity.Member;
 import com.mds.domain.member.repository.MemberRepository;
-import com.mds.common.external.ExternalApiRequest;
 import com.mds.domain.story.entity.StoryLike;
 import com.mds.domain.story.entity.mongo.Language;
 import com.mds.domain.story.entity.mongo.Story;
@@ -28,15 +29,16 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class StoryService {
 
-    private final PromptsConfig promptsConfig;
     private final StoryRepository storyRepository;
     private final MemberRepository memberRepository;
     private final StoryLikeRepository storyLikeRepository;
     private final LibraryService libraryService;
-    private final ExternalApiRequest externalApiRequest;
     private final StoryCacheService storyCacheService;
     private final FollowRepository followRepository;
     private final TtsClient ttsClient;
+    private final OpenAiClient openAiClient;
+    private final S3Utils s3Utils;
+    private final ResponseParser responseParser;
 
     /**
      * 동화 생성
@@ -49,11 +51,13 @@ public class StoryService {
         Language language = Language.fromString(requestDto.getLanguage());
         Member member = memberRepository.findByIdOrThrow(memberId);
 
-        // 프롬프트와 토큰 설정
-        String prompt = getPromptForAge(requestDto.getAge(), language, requestDto.getGiven());
-
-        // 동화 생성 요청 및 응답 파싱
-        Map<String, String> storyDetails = externalApiRequest.sendStoryCreationRequest(prompt, language);
+        Map<String, String> storyDetails = responseParser.extractStoryDetails(
+                openAiClient.requestStory(
+                        requestDto.getAge(),
+                        language == Language.EN ? "EN" : "KO",
+                        requestDto.getGiven()
+                )
+        );
 
         Story save = storyRepository.save(Story.builder()
                 .age(requestDto.getAge())
@@ -67,8 +71,10 @@ public class StoryService {
                 .build());
 
         // 동화 요약 및 커버 이미지 생성 요청
-        String summary = externalApiRequest.sendSummaryRequest(storyDetails.get("content"));
-        save.updateCoverUrl(externalApiRequest.sendImageRequest(save.getId(), summary));
+        String summary = openAiClient.requestSummary(storyDetails.get("content"));
+        String imageUrl = responseParser.extractImageUrl(openAiClient.requestImage(summary));
+        String url = s3Utils.uploadImageFromUrl("cover/", save.getId(), imageUrl);
+        save.updateCoverUrl(url);
         storyRepository.save(save);
 
         // 생성된 동화를 최근 동화에 포함
@@ -77,27 +83,6 @@ public class StoryService {
         return StoryDto.StoryCreationResponse.builder()
                 .story(save)
                 .build();
-    }
-
-    /**
-     * 입력 받은 테마와 나이, 언어를 통해 프롬프트 제공
-     * @param age
-     * @param language
-     * @param given
-     * @return
-     */
-    private String getPromptForAge(int age, Language language, String given) {
-        Map<Integer, String> templates = switch (language) {
-            case EN -> promptsConfig.getEn();
-            case KO -> promptsConfig.getKo();
-        };
-
-        String template = templates.get(age);
-        if (template == null) {
-            throw new StoryException(StoryErrorCode.INVALID_AGE);
-        }
-
-        return template.replace("{given}", given);
     }
 
     /**

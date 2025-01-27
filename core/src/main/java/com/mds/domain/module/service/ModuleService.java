@@ -1,6 +1,8 @@
 package com.mds.domain.module.service;
 
+import com.mds.OpenAiClient;
 import com.mds.TtsClient;
+import com.mds.common.utils.ResponseParser;
 import com.mds.domain.child.repository.ChildRepository;
 import com.mds.domain.dashboard.entity.QuestionAnswer;
 import com.mds.domain.dashboard.repository.QuestionAnswerRepository;
@@ -8,7 +10,6 @@ import com.mds.domain.module.exception.ModuleErrorCode;
 import com.mds.domain.module.exception.ModuleException;
 import com.mds.domain.dashboard.entity.StoryQuestion;
 import com.mds.domain.dashboard.repository.StoryQuestionRepository;
-import com.mds.common.external.ExternalApiRequest;
 import com.mds.domain.story.entity.mongo.Language;
 import com.mds.domain.story.service.StoryService;
 import com.mds.model.TtsClientResult;
@@ -41,8 +42,9 @@ public class ModuleService {
     private final StoryQuestionRepository storyQuestionRepository;
     private final ChildRepository childRepository;
     private final QuestionAnswerRepository questionAnswerRepository;
-    private final ExternalApiRequest externalApiRequest;
     private final TtsClient ttsClient;
+    private final ResponseParser responseParser;
+    private final OpenAiClient openAiClient;
 
 //    /**
 //     * 초기 연결 설정
@@ -129,6 +131,8 @@ public class ModuleService {
                 () -> new ModuleException(ModuleErrorCode.INVALID_FILE)
         );
 
-        return questionAnswer.updateAnswer(externalApiRequest.sendSTTRequest(file));
+
+        String sttText = responseParser.extractSttText(openAiClient.requestStt(file));
+        return questionAnswer.updateAnswer(sttText);
     }
 }

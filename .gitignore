@@ -1,8 +1,7 @@
 application.yml
 application-tts.yml
 application-kakao.yml
-application-ai.yml
-application-prompt.yml
+application-openai.yml
 HELP.md
 .gradle
 build/

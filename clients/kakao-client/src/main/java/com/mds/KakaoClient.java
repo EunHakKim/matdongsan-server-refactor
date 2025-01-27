@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+import static feign.FeignException.*;
+
 @Component
 public class KakaoClient {
 
@@ -27,7 +29,7 @@ public class KakaoClient {
         this.kakaoUserInfoApi = kakaoUserInfoApi;
     }
 
-    public String getAccessToken(String code) {
+    public String requestAccessToken(String code) {
         Map<String, String> requestParams = new HashMap<>();
         requestParams.put("grant_type", "authorization_code");
         requestParams.put("client_id", clientId);
@@ -36,18 +38,18 @@ public class KakaoClient {
         requestParams.put("code", code);
 
         try {
-            return kakaoAuthApi.getAccessToken(requestParams);
-        } catch (FeignException.FeignClientException e) {
+            return kakaoAuthApi.requestAccessToken(requestParams);
+        } catch (FeignClientException e) {
             throw new KakaoClientException("CLIENT");
         } catch (Exception e) {
             throw new KakaoClientException(e.getMessage());
         }
     }
 
-    public String getUserInfo(String token) {
+    public String requestUserInfo(String token) {
         try {
-            return kakaoUserInfoApi.getUserInfo("Bearer " + token);
-        } catch (FeignException.FeignClientException e) {
+            return kakaoUserInfoApi.requestUserInfo("Bearer " + token);
+        } catch (FeignClientException e) {
             throw new KakaoClientException("CLIENT");
         } catch (Exception e) {
             throw new KakaoClientException(e.getMessage());

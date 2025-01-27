@@ -17,7 +17,7 @@ public class TtsClient {
     public TtsClientResult requestTts(String file_name, String language, String text, String folder) {
         try{
             TtsRequestDto request = new TtsRequestDto(file_name, language, text, folder);
-            return ttsApi.sendTTSRequest(request).toResult();
+            return ttsApi.requestTts(request).toResult();
         } catch (FeignClientException e) {
             throw new TtsClientException("CLIENT");
         } catch (Exception e) {

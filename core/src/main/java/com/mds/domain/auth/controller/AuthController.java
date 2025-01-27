@@ -4,7 +4,6 @@ import com.mds.domain.auth.dto.LoginRequest;
 import com.mds.domain.auth.dto.LoginResponse;
 import com.mds.domain.auth.dto.TokenResponse;
 import com.mds.domain.auth.service.AuthService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,16 +21,14 @@ public class AuthController {
 
     @Operation(summary = "인증 코드를 통해 카카오 토큰 반환 (로컬 테스트용)")
     @GetMapping("/kakao/token")
-    public ResponseEntity<String> getKakaoToken(@RequestParam(name = "code") String code)
-            throws JsonProcessingException {
+    public ResponseEntity<String> getKakaoToken(@RequestParam(name = "code") String code) {
         return ResponseEntity.ok()
                 .body(authService.getToken(code));
     }
 
     @Operation(summary = "카카오 토큰과 이메일을 통해서 로그인 수행 (처음 로그인일 경우 회원을 생성)")
     @PostMapping("/kakao/login")
-    public ResponseEntity<LoginResponse> loginKakao(@RequestBody LoginRequest loginRequest)
-            throws JsonProcessingException {
+    public ResponseEntity<LoginResponse> loginKakao(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok()
                 .body(authService.kakaoLogin(loginRequest));
     }

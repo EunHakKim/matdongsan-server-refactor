@@ -14,5 +14,5 @@ interface TtsApi {
      * @return
      */
     @PostMapping(value = "/generate-tts", consumes = MediaType.APPLICATION_JSON_VALUE)
-    TtsResponseDto sendTTSRequest(@RequestBody TtsRequestDto ttsRequestDto);
+    TtsResponseDto requestTts(@RequestBody TtsRequestDto ttsRequestDto);
 }
